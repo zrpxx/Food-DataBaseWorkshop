@@ -86,6 +86,12 @@ if __name__ == '__main__':
                 # create food
                 sql = "INSERT INTO FOOD (NAME, NUTRI_ID, BRAND_ID, SCORE_ID, CREATOR_ID) VALUE (%s, %s, %s, %s, %s)"
                 cursor.execute(sql, [name, nutrition_id, brand_id, nutriscore_id, creator_uid])
+                # update brand product count
+                sql = "SELECT PRODUCT_COUNT FROM brand WHERE NAME=%s"
+                cursor.execute(sql, brand)
+                num = cursor.fetchone()[0] + 1
+                sql = "UPDATE BRAND SET PRODUCT_COUNT=%s WHERE NAME=%s"
+                cursor.execute(sql, [num, brand])
                 # fetch food id
                 sql = "SELECT ID FROM FOOD ORDER BY ID DESC LIMIT 1"
                 cursor.execute(sql)
