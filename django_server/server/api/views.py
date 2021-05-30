@@ -280,20 +280,10 @@ def update(request):
 
 
 @csrf_exempt
-def fuck(request):
-    dic = {'id': [], 'name': []}
-    lis = Food.objects.all()
-    for li in lis:
-        dic['id'].append(li.id)
-        dic['name'].append(li.name)
-    return HttpResponse(json.dumps(dic))
-
-
-@csrf_exempt
 def query(request, food_start):
     dic = {'food_id': [], 'food_name': [], 'food_brand': [], 'food_categories': [], 'food_score': []}
     try:
-        food_list = Food.objects.all()[food_start: food_start + 20]
+        food_list = Food.objects.all()[food_start: food_start + 60]
         for food_li in food_list:
             _Id = food_li.id
 
@@ -335,6 +325,11 @@ def product(request, food_id):
         dic['food_brand_product_count'] = food.brand.product_count
         dic['food_score'] = food.score.r
         dic['food_score_desc'] = food.score.des
+        dic['food_nutrition_carbohydrate'] = food.nutri.carbohydrate
+        dic['food_nutrition_sugar'] = food.nutri.sugar
+        dic['food_nutrition_protein'] = food.nutri.protein
+        dic['food_nutrition_fat'] = food.nutri.fat
+        dic['food_nutrition_energy_kcal'] = food.nutri.energy_kcal
         dic['food_creator'] = food.creator.uid
         dic['categories_id'] = []
         dic['categories_name'] = []
@@ -349,4 +344,27 @@ def product(request, food_id):
 
     return HttpResponse(json.dumps(dic))
 
+
+@csrf_exempt
+def search(request):
+    dic = {}
+    if request.method == 'GET':
+        dic['status'] = "Failed"
+        dic['message'] = "Wrong Method"
+        return HttpResponse(json.dumps(dic))
+    try:
+        post_content = json.loads(request.body)
+        food_name = post_content["food_name"]
+        foods = Food.objects.filter(name__contains=food_name)
+        dic['food_ids'] = []
+        for food in foods:
+            dic['food_ids'].append(food.id)
+        dic['status'] = "Success"
+    except (KeyError, json.decoder.JSONDecodeError):
+        dic['status'] = "Failed"
+        dic['message'] = "No Input"
+    except (Food.DoesNotExist, FRC.DoesNotExist):
+        dic['status'] = "Failed"
+
+    return HttpResponse(json.dumps(dic))
 
