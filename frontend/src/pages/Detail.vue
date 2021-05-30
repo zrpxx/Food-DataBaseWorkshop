@@ -42,7 +42,7 @@ export default {
     if(this.$route.params.food_id !== undefined)
       this.food_id = this.$route.params.food_id
     let _this = this
-    this.$axios.get('http://192.168.31.92:8000/api/product/' + this.food_id).then(function (response) {
+    this.$axios.get('http://127.0.0.1:8000/api/product/' + this.food_id).then(function (response) {
       let res = response.data
       if(res.status === 'Success') {
         _this.food_name = res.food_name
