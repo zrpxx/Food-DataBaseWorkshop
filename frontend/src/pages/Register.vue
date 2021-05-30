@@ -6,7 +6,7 @@
           <q-card-section>
             <div class="text-center q-pt-lg">
               <div class="col text-h4 ellipsis">
-                Log in
+                Register
               </div>
             </div>
           </q-card-section>
@@ -19,6 +19,7 @@
                 v-model="username"
                 label="Username"
                 lazy-rules
+                :rules="[ val => val && val.length > 0 || 'Please type a username']"
               />
 
               <q-input
@@ -27,12 +28,12 @@
                 v-model="password"
                 label="Password"
                 lazy-rules
-
+                :rules="[val => val !== null && val !== '' || 'Please type a password']"
               />
 
               <div class="q-ml-lg q-mt-lg">
-                <q-btn label="Login" @click="onLogin()" type="button" color="primary"/>
-                <q-btn label="Register" @click="goReg()" type="button" color="white" text-color="primary"/>
+                <q-btn label="Register" @click="onReg()" type="button" color="primary"/>
+                <q-btn label="Login" @click="goLogin()" type="button" color="white" text-color="primary"/>
               </div>
             </q-form>
           </q-card-section>
@@ -57,42 +58,35 @@ export default {
     this.loggedIn = sessionStorage.getItem('loggedIn') !== null
   },
   methods: {
-    onLogin() {
-      if(this.username === "1" && this.password === "1") {
-        sessionStorage.setItem('loggedIn', '1')
-        sessionStorage.setItem('userid', '111')
-        sessionStorage.setItem('role', '1')
-        this.$router.push('/index')
-      }
+    onReg() {
+      if(this.username === '' || this.password === '')
+        return
       let _this = this
-      this.$axios.post('http://192.168.31.92:8000/api/login', {
-           username: this.username,
-           password: this.password
+      this.$axios.post('http://192.168.31.92:8000/api/register', {
+        username: this.username,
+        password: this.password,
+        role: 0
       }).then(function (response) {
-          let res = response.data
-          if(res.status === 'Success') {
-            sessionStorage.setItem('loggedIn', _this.username)
-            sessionStorage.setItem('userid', res.user_id)
-            if(res.user_role === 1)
-              sessionStorage.setItem('role', '1')
-            _this.$router.replace('/index')
-          } else {
-            _this.$q.notify({
-              type: 'negative',
-              message: 'Login failed. ' + res.message
-            })
-          }
-      }).catch(function (error) {
-          console.log(error);
+        let res = response.data
+        if(res.status === 'Success') {
+          _this.$router.replace('/')
+        } else {
           _this.$q.notify({
             type: 'negative',
-            position: 'top',
-            message: 'Internal error.'
+            message: 'Register failed. ' + res.message
           })
+        }
+      }).catch(function (error) {
+        console.log(error);
+        _this.$q.notify({
+          type: 'negative',
+          position: 'top',
+          message: 'Internal error.'
+        })
       });
     },
-    goReg() {
-      this.$router.push('/reg')
+    goLogin() {
+      this.$router.push('/')
     }
   }
 }
