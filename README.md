@@ -13,6 +13,8 @@
 ### 前后端分离项目后端主要为前端发送api，所有views中接受到的request返回的response都包含json数据文件
 ### django启动命令为py manage.py runserver 默认127.0.0.1:8000端口，vue接收也在这个端口
 ## 4. Vue客户端
-### 
+### 依赖安装后，在frontend目录下执行quasar dev运行前端服务，默认地址为127.0.0.1:8080
+### 前端主要使用Vue框架，Quasar UI框架，axios为网络库
 ## 5. 依赖安装
-### 
+###  前端: 安装Nodejs环境，frontend目录下执行npm install
+###  后端：安装conda环境，执行conda env create -f food_env.yaml
