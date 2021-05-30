@@ -1,7 +1,9 @@
 import scrapy
 
+
  # the way to use scrapy css please check "https://blog.csdn.net/dangsh_/article/details/78617178"
  # scrapy crawl food -O food.json       ------to start
+
 
 class FoodSpider(scrapy.Spider):
     name = "food"

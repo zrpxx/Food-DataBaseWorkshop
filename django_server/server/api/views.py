@@ -1,5 +1,6 @@
 from django.db.models import QuerySet
 from django.shortcuts import render
+from django.views import generic
 
 # Create your views here.
 import json
@@ -7,6 +8,11 @@ from django.http import HttpResponse
 from .models import User, Brand, Nutrition, NutriScore, Category, FRC, Food
 from django.views.decorators.csrf import csrf_exempt
 import datetime
+import random
+
+
+def index(request):
+    return render(request, 'index.html')
 
 
 @csrf_exempt
@@ -179,10 +185,9 @@ def delete(request):
         uid = post_content['uid']
         food_id = post_content['food_id']
         food = Food.objects.get(id=food_id)
+        user = User.objects.get(uid=uid)
 
-        uid = int(uid)
-
-        if food.creator.uid != uid:
+        if user.role != 1:
             dic['status'] = "Failed"
             dic['message'] = "No Permission"
             return HttpResponse(json.dumps(dic))
@@ -210,6 +215,9 @@ def delete(request):
     except Food.DoesNotExist:
         dic['status'] = "Failed"
         dic['message'] = "No Food"
+    except User.DoesNotExist:
+        dic['status'] = "Failed"
+        dic['message'] = "No User"
     except FRC.DoesNotExist:
         dic['status'] = "Failed"
         dic['message'] = "Unknown Error"
@@ -248,7 +256,11 @@ def update(request):
 
         food = Food.objects.get(id=food_id)
         uid = int(uid)
-
+        user = User.objects.get(uid=uid)
+        if user.role != 1:
+            dic['status'] = "Failed"
+            dic['message'] = "No Permission"
+            return HttpResponse(json.dumps(dic))
         # update score
         new_score = NutriScore.objects.get(id=score_id)
         food.score = new_score
@@ -263,10 +275,7 @@ def update(request):
         nutri.protein = nutrition_protein
         nutri.save()
         dic['status'] = "Success"
-        if food.creator.uid != uid:
-            dic['status'] = "Failed"
-            dic['message'] = "No Permission"
-            return HttpResponse(json.dumps(dic))
+
     except (KeyError, json.decoder.JSONDecodeError):
         dic['status'] = "Failed"
         dic['message'] = "No Input"
@@ -355,7 +364,7 @@ def search(request):
     try:
         post_content = json.loads(request.body)
         food_name = post_content["food_name"]
-        foods = Food.objects.filter(name__contains=food_name)
+        foods = Food.objects.filter(name__contains=food_name)[:5]
         dic['food_ids'] = []
         for food in foods:
             dic['food_ids'].append(food.id)
@@ -368,3 +377,15 @@ def search(request):
 
     return HttpResponse(json.dumps(dic))
 
+
+@csrf_exempt
+def ran(request):
+    dic = {}
+    length = len(Food.objects.all())
+    num = random.randrange(0, length)
+    food = Food.objects.all()[num]
+    dic["food_id"] = food.id
+    dic["food_name"] = food.name
+    dic["status"] = "Success"
+
+    return HttpResponse(json.dumps(dic))

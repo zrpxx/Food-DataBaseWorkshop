@@ -19,7 +19,9 @@ from django.conf.urls import include, url
 from django.views.generic.base import TemplateView
 from django.http import HttpResponse
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls'))
+    path('api/', include('api.urls')),
+    # path('test', views.index)
 ]
