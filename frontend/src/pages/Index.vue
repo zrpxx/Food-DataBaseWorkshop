@@ -33,7 +33,7 @@ export default {
       this.isAdmin = sessionStorage.getItem('role') === '1'
     }
     let _this = this
-    this.$axios.get('http://192.168.31.92:8000/api/random').then(function (response) {
+    this.$axios.get('http://127.0.0.1:8000/api/random').then(function (response) {
       let res = response.data
       if(res.status === 'Success') {
         _this.random_food_id = res.food_id

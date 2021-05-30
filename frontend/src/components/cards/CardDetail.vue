@@ -219,7 +219,7 @@ export default {
     onDelete() {
       console.log(sessionStorage.getItem('userid'))
       let _this = this
-      this.$axios.post('http://192.168.31.92:8000/api/delete', {
+      this.$axios.post('http://127.0.0.1:8000/api/delete', {
         uid: sessionStorage.getItem('userid'),
         food_id: _this.food_id
       }).then(function (response) {
@@ -274,7 +274,7 @@ export default {
           newScore = -1
               break
       }
-      this.$axios.post('http://192.168.31.92:8000/api/update', {
+      this.$axios.post('http://127.0.0.1:8000/api/update', {
         uid: sessionStorage.getItem('userid'),
         food_id: _this.food_id,
         score: newScore,

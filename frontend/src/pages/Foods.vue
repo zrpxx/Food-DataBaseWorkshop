@@ -45,7 +45,7 @@ export default {
       this.isAdmin = sessionStorage.getItem('role') === '1'
     }
     let _this = this
-    this.$axios.get('http://192.168.31.92:8000/api/query/1').then(function (response) {
+    this.$axios.get('http://127.0.0.1:8000/api/query/1').then(function (response) {
       let res = response.data;
       //console.log(res)
       for(let i = 0; i < res.food_id.length; i++) {
@@ -78,7 +78,7 @@ export default {
     onLoad(index, done) {
       setTimeout(() => {
         let _this = this
-        this.$axios.get('http://192.168.31.92:8000/api/query/' + (_this.foods[0].length + this.foods[1].length + this.foods[2].length)).then(function (response) {
+        this.$axios.get('http://127.0.0.1:8000/api/query/' + (_this.foods[0].length + this.foods[1].length + this.foods[2].length)).then(function (response) {
           let res = response.data;
           //console.log(res)
           for(let i = 0; i < res.food_id.length; i++) {

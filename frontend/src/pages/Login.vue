@@ -65,7 +65,7 @@ export default {
         this.$router.push('/index')
       }
       let _this = this
-      this.$axios.post('http://192.168.31.92:8000/api/login', {
+      this.$axios.post('http://127.0.0.1:8000/api/login', {
            username: this.username,
            password: this.password
       }).then(function (response) {

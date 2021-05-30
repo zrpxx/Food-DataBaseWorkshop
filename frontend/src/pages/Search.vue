@@ -44,7 +44,7 @@ export default {
         return
       }
       let _this = this
-      this.$axios.post('http://192.168.31.92:8000/api/search', {
+      this.$axios.post('http://127.0.0.1:8000/api/search', {
         food_name: _this.search_name
       }).then(function (response) {
         console.log(response)
